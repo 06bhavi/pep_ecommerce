@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Shopping Cart - Nexara{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 20px;">
+    {% if cart.items.exists %}
+        <div class="cart-container">
+            <div class="cart-items">
+                <div style="background: white; padding: 20px; box-shadow: var(--shadow); margin-bottom: 5px;">
+                    <h2 style="font-size: 18px; font-weight: 600;">My Cart ({{ cart_count }})</h2>
+                </div>
+                
+                {% for item in cart.items.all %}
+                <div class="cart-item">
+                    <div style="text-align: center;">
+                        <img src="{{ item.product.get_image }}" alt="{{ item.product.name }}" class="cart-item-img">
+                        <div style="margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <a href="{% url 'cart_update' item.product.id 'decrement' %}" class="qty-btn">-</a>
+                            <span style="padding: 5px 15px; border: 1px solid #e0e0e0; min-width: 50px; text-align: center;">{{ item.quantity }}</span>
+                            <a href="{% url 'cart_update' item.product.id 'increment' %}" class="qty-btn">+</a>
+                        </div>
+                    </div>
+                    <div style="flex: 1;">
+                        <h3 style="font-size: 18px; font-weight: 500; margin-bottom: 10px;">{{ item.product.name }}</h3>
+                        <p style="font-size: 14px; color: #878787;">Category: {{ item.product.category.name }}</p>
+                        <p style="font-size: 20px; font-weight: 700; margin-top: 15px;">₹{{ item.product.price }}</p>
+                        
+                        <div style="margin-top: 30px; display: flex; gap: 25px;">
+                            <a href="{% url 'wishlist_toggle' item.product.id %}" style="text-decoration: none; color: black; font-weight: 600; font-size: 14px; text-transform: uppercase;">Save for later</a>
+                            <a href="{% url 'cart_remove' item.product.id %}" style="text-decoration: none; color: black; font-weight: 600; font-size: 14px; text-transform: uppercase;">Remove</a>
+                        </div>
+                    </div>
+                    <div style="font-size: 14px; color: #878787;">
+                        Delivery by Mon Feb 23 | <span style="color: green;">Free</span>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <div style="background: white; padding: 20px; box-shadow: var(--shadow); text-align: right; position: sticky; bottom: 0; box-shadow: 0 -2px 10px 0 rgba(0,0,0,.1);">
+                    <a href="{% url 'checkout' %}" class="btn-primary" style="display: inline-block; width: auto; padding: 15px 60px;">PLACE ORDER</a>
+                </div>
+            </div>
+            
+            <div class="cart-summary">
+                <div style="background: white; box-shadow: var(--shadow); position: sticky; top: 80px;">
+                    <div style="padding: 15px 20px; border-bottom: 1px solid #f0f0f0;">
+                        <h3 style="color: #878787; font-size: 16px; font-weight: 600; text-transform: uppercase;">Price Details</h3>
+                    </div>
+                    <div style="padding: 20px; font-size: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <span>Price ({{ cart_count }} items)</span>
+                            <span>₹{{ cart.total_price }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <span>Discount</span>
+                            <span style="color: green;">− ₹0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px dashed #e0e0e0; padding-bottom: 15px;">
+                            <span>Delivery Charges</span>
+                            <span style="color: green;">FREE</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 18px; padding: 15px 0;">
+                            <span>Total Amount</span>
+                            <span>₹{{ cart.total_price }}</span>
+                        </div>
+                        <p style="color: #388e3c; font-weight: 600; font-size: 14px;">You will save ₹0 on this order</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div style="background: white; padding: 50px; text-align: center; box-shadow: var(--shadow);">
+            <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/empty-cart_ee6141.png" alt="Empty Cart" style="max-width: 300px;">
+            <h2 style="margin-top: 30px;">Your cart is empty!</h2>
+            <p style="color: #878787; margin-top: 10px;">Add items to it now.</p>
+            <a href="{% url 'home' %}" class="btn-primary" style="display: inline-block; width: auto; padding: 12px 60px; margin-top: 20px; text-decoration: none;">Shop Now</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

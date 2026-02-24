@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Nexara | Online Shopping{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2874f0;
+            --secondary-color: #fb641b;
+            --text-color: #212121;
+            --light-gray: #f0f2f5;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+            --shadow: 0 2px 4px 0 rgba(0,0,0,.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f3f6;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo a {
+            color: var(--white);
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            font-style: italic;
+        }
+
+        .search-bar {
+            flex: 1;
+            margin: 0 40px;
+            max-width: 600px;
+        }
+
+        .search-bar form {
+            display: flex;
+            background: var(--white);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-bar button {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-item {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            background: var(--white);
+            color: var(--primary-color);
+            padding: 5px 30px;
+            border-radius: 2px;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: var(--secondary-color);
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            border: 1px solid var(--white);
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--white);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1001;
+            right: 0;
+            border-radius: 4px;
+            top: 100%;
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f9f9f9;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Home Styles */
+        .category-bar {
+            background: var(--white);
+            padding: 10px 0;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .category-list {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-item {
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .category-item img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 5px;
+        }
+
+        .category-item span {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Sections */
+        .section {
+            background: var(--white);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+        }
+
+        .view-all {
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 2px;
+            font-size: 14px;
+        }
+
+        /* Product Card */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .product-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* Cart & Checkout Page */
+        .cart-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .cart-items {
+            flex: 2;
+        }
+
+        .cart-summary {
+            flex: 1;
+        }
+
+        .cart-item {
+            display: flex;
+            background: var(--white);
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            gap: 20px;
+        }
+
+        .cart-item-img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .qty-btn {
+            padding: 5px 10px;
+            border: 1px solid var(--border-color);
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        /* Forms */
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: var(--white);
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .btn-primary {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        /* Messages */
+        .messages {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 2000;
+        }
+
+        .alert {
+            padding: 15px 25px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            color: white;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .alert-success { background: #4caf50; }
+        .alert-error { background: #f44336; }
+        .alert-info { background: #2196f3; }
+        .alert-warning { background: #ff9800; }
+
+        .close-btn {
+            margin-left: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #172337;
+            color: #878787;
+            margin-top: 50px;
+            padding: 40px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: var(--white);
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: inherit;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer-section a:hover {
+            text-decoration: underline;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            font-size: 20px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #454d5e;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <a href="{% url 'home' %}">Nexara</a>
+            </div>
+            <div class="search-bar">
+                <form action="{% url 'search' %}" method="get">
+                    <input type="text" name="q" placeholder="Search for products, brands and more" value="{{ query|default:'' }}">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <nav class="nav-links">
+                {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <a href="{% url 'profile' %}" class="nav-item"><i class="fas fa-user"></i> {{ user.username }}</a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'profile' %}">My Profile</a>
+                            <a href="{% url 'order_history' %}">Orders</a>
+                            <a href="{% url 'wishlist_detail' %}">Wishlist</a>
+                            <a href="{% url 'logout' %}">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-item login-btn">Login</a>
+                    <a href="{% url 'register' %}" class="nav-item">Register</a>
+                {% endif %}
+                <a href="{% url 'cart_detail' %}" class="nav-item cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                    {% if cart_count > 0 %}
+                        <span class="badge">{{ cart_count }}</span>
+                    {% endif %}
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                    <span class="close-btn">&times;</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-section">
+                <h3>Nexara</h3>
+                <p>Experience the future of shopping with Nexara. Quality products, fast delivery.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Track Order</a></li>
+                    <li><a href="#">Return Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Nexara Shop. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Close alert messages
+            const closeBtns = document.querySelectorAll('.close-btn');
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.style.opacity = '0';
+                    setTimeout(() => {
+                        this.parentElement.style.display = 'none';
+                    }, 600);
+                });
+            });
+
+            // Auto hide messages after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                    }, 600);
+                }, 5000);
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

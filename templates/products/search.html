@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Search results for "{{ query }}" - Nexara{% endblock %}
+
+{% block content %}
+<div class="container section" style="margin-top: 20px;">
+    <div class="section-header">
+        <h2>Search results for "{{ query }}"</h2>
+        <span style="font-size: 14px; color: #878787;">Showing {{ products.count }} results</span>
+    </div>
+    
+    {% if products %}
+        <div class="product-grid">
+            {% for product in products %}
+                <a href="{% url 'product_detail' product.slug %}" class="product-card">
+                    <img src="{{ product.get_image }}" alt="{{ product.name }}" class="product-image">
+                    <div class="product-info">
+                        <p class="product-name">{{ product.name }}</p>
+                        <p class="product-price">₹{{ product.price }}</p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 50px;">
+            <img src="https://stories.freepiklabs.com/storage/26838/no-data-pana-4414.png" alt="No results" style="max-width: 300px;">
+            <p style="font-size: 18px; margin-top: 20px;">Sorry, no results found!</p>
+            <p style="color: #878787;">Please check the spelling or try searching for something else.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

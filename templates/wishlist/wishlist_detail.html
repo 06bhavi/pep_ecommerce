@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}My Wishlist - Nexara{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 20px; display: flex; gap: 20px;">
+    <!-- Sidebar -->
+    <aside style="width: 280px;">
+        <div style="background: white; padding: 20px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+            <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/profile-pic-male_4811a3.svg" alt="Profile" style="width: 50px;">
+            <div>
+                <p style="font-size: 12px; color: #878787;">Hello,</p>
+                <p style="font-weight: 600;">{{ user.username }}</p>
+            </div>
+        </div>
+        <div style="background: white; box-shadow: var(--shadow);">
+            <a href="{% url 'order_history' %}" style="display: block; padding: 15px 20px; text-decoration: none; color: black; border-bottom: 1px solid #f0f0f0; font-weight: 600;"><i class="fas fa-box" style="color: #2874f0; margin-right: 15px;"></i> MY ORDERS</a>
+            <a href="{% url 'wishlist_detail' %}" style="display: block; padding: 15px 20px; text-decoration: none; color: #2874f0; border-bottom: 1px solid #f0f0f0; font-weight: 600; background: #f0f7ff;"><i class="fas fa-heart" style="margin-right: 15px;"></i> MY WISHLIST</a>
+            <a href="{% url 'profile' %}" style="display: block; padding: 15px 20px; text-decoration: none; color: black; font-weight: 600;"><i class="fas fa-user" style="color: #2874f0; margin-right: 15px;"></i> PROFILE INFO</a>
+        </div>
+    </aside>
+
+    <!-- Wishlist Items -->
+    <div style="flex: 1; background: white; box-shadow: var(--shadow);">
+        <div style="padding: 20px; border-bottom: 1px solid #f0f0f0;">
+            <h2 style="font-size: 18px; font-weight: 600;">My Wishlist ({{ wishlist_items.count }})</h2>
+        </div>
+        
+        {% for item in wishlist_items %}
+        <div style="display: flex; gap: 25px; padding: 25px; border-bottom: 1px solid #f0f0f0; position: relative;">
+            <img src="{{ item.product.get_image }}" alt="{{ item.product.name }}" style="width: 100px; height: 100px; object-fit: contain;">
+            <div style="flex: 1;">
+                <h3 style="font-size: 18px; font-weight: 400; margin-bottom: 10px;">{{ item.product.name }}</h3>
+                <p style="font-size: 20px; font-weight: 700;">₹{{ item.product.price }}</p>
+                
+                <div style="margin-top: 20px;">
+                    <a href="{% url 'product_detail' item.product.slug %}" class="btn-primary" style="display: inline-block; width: auto; padding: 10px 30px; margin-right: 20px; text-decoration: none;">View Product</a>
+                </div>
+            </div>
+            
+            <form action="{% url 'wishlist_toggle' item.product.id %}" method="post" style="position: absolute; right: 25px; top: 25px;">
+                {% csrf_token %}
+                <button type="submit" style="background: none; border: none; color: #878787; cursor: pointer; font-size: 20px;"><i class="fas fa-trash"></i></button>
+            </form>
+        </div>
+        {% empty %}
+        <div style="padding: 50px; text-align: center;">
+            <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/mywishlist-empty_39f7a5.png" alt="Empty Wishlist" style="max-width: 200px;">
+            <h2 style="margin-top: 20px;">Empty Wishlist</h2>
+            <p style="color: #878787; margin-top: 10px;">You have no items in your wishlist. Start adding!</p>
+            <a href="{% url 'home' %}" class="btn-primary" style="display: inline-block; width: auto; padding: 12px 60px; margin-top: 20px; text-decoration: none;">Shop Now</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

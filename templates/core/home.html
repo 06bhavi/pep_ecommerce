@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Category Bar -->
+<div class="category-bar">
+    <div class="container category-list">
+        {% for category in categories %}
+            <a href="{% url 'product_list_by_category' category.slug %}" class="category-item">
+                <img src="{{ category.get_image }}" alt="{{ category.name }}">
+                <span>{{ category.name }}</span>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Banner -->
+<div class="container section">
+    <div class="banner">
+        {% if banner %}
+            <a href="{{ banner.link|default:'#' }}">
+                <img src="{{ banner.get_image }}" alt="{{ banner.title }}" style="width: 100%; border-radius: 4px; display: block;">
+            </a>
+        {% else %}
+            <img src="https://via.placeholder.com/1200x300?text=Nexara+Premium+Shopping" alt="Banner" style="width: 100%; border-radius: 4px;">
+        {% endif %}
+    </div>
+</div>
+
+<!-- Featured Products -->
+<div class="container section">
+    <div class="section-header">
+        <h2>Top Deals</h2>
+        <a href="{% url 'product_list' %}" class="view-all">View All</a>
+    </div>
+    <div class="product-grid">
+        {% for product in featured_products %}
+            <a href="{% url 'product_detail' product.slug %}" class="product-card">
+                <img src="{{ product.get_image }}" alt="{{ product.name }}" class="product-image">
+                <div class="product-info">
+                    <p class="product-name">{{ product.name }}</p>
+                    <p class="product-price">₹{{ product.price }}</p>
+                    <p style="color: green; font-size: 12px; margin-top: 5px;">Free Delivery</p>
+                </div>
+            </a>
+        {% empty %}
+            <p>No products available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

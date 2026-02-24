@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if category %}{{ category.name }} - Nexara{% else %}All Products - Nexara{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container section" style="display: flex; gap: 20px; margin-top: 20px;">
+    <!-- Sidebar -->
+    <aside style="width: 250px; background: white; padding: 20px; box-shadow: var(--shadow); height: fit-content;">
+        <h3>Filters</h3>
+        <hr style="margin: 15px 0;">
+        <h4>Categories</h4>
+        <ul style="list-style: none; margin-top: 10px;">
+            <li><a href="{% url 'product_list' %}" style="text-decoration: none; color: {% if not category %}#2874f0{% else %}black{% endif %}; font-weight: {% if not category %}600{% else %}400{% endif %};">All</a></li>
+            {% for c in categories %}
+                <li style="margin-top: 8px;"><a href="{% url 'product_list_by_category' c.slug %}" style="text-decoration: none; color: {% if category.slug == c.slug %}#2874f0{% else %}black{% endif %}; font-weight: {% if category.slug == c.slug %}600{% else %}400{% endif %};">{{ c.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div style="flex: 1;">
+        <div class="section-header">
+            <h2>{% if category %}{{ category.name }}{% else %}All Products{% endif %}</h2>
+            <span style="font-size: 14px; color: #878787;">Showing {{ products.count }} results</span>
+        </div>
+        <div class="product-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+            {% for product in products %}
+                <div class="product-card" style="background: white;">
+                    <a href="{% url 'product_detail' product.slug %}" style="text-decoration: none; color: inherit;">
+                        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="product-image">
+                        <div class="product-info">
+                            <p class="product-name">{{ product.name }}</p>
+                            <p class="product-price">₹{{ product.price }}</p>
+                        </div>
+                    </a>
+                    <div style="padding: 0 15px 15px;">
+                        <form action="{% url 'wishlist_toggle' product.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" style="background: none; border: none; color: #ff4343; cursor: pointer; font-size: 18px;"><i class="far fa-heart"></i></button>
+                        </form>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No products found.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
